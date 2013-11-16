@@ -1,0 +1,121 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<parent>
+		<groupId>com.patrikdufresne.cbc4j</groupId>
+		<artifactId>cbc4j-root</artifactId>
+		<version>1.0-SNAPSHOT</version>
+	</parent>
+	<artifactId>cbc4j-win-x86_64</artifactId>
+	<properties>
+		<compile.target>x86_64-w64-mingw32</compile.target>
+    <compile.ldflags>-static-libgcc -static-libstdc++</compile.ldflags>
+		<compile.cxxflags></compile.cxxflags>
+    <javacbc.lib.name>javacbc${javacbc.version}.dll</javacbc.lib.name>
+    <javacbc.platform.dir>win/x86_64</javacbc.platform.dir>
+	</properties>
+	<build>
+		<plugins>
+			<!-- Compile cbc and javacbc -->
+      <!-- The configuration is defined in the parent pom -->
+			<plugin>
+				<artifactId>maven-antrun-plugin</artifactId>
+				<version>1.7</version>
+				<executions>
+					<execution>
+						<id>build-coin-cbc</id>
+						<phase>generate-sources</phase>
+						<goals>
+							<goal>run</goal>
+						</goals>
+            <configuration>
+					    <target>				
+						    <!-- Get the coin-cbc source -->
+						    <get src="${cbc.url}" dest="${cbc.dir}.tgz" skipexisting="true" />
+						    <untar src="${cbc.dir}.tgz"
+								    dest="${project.build.directory}"
+								    compression="gzip" />
+						    <!-- Configure coin-cbc -->
+						    <echo message="------------------------------------------------------------------------" />
+						    <echo message="COMPILING COIN_CBC" />
+						    <echo message="------------------------------------------------------------------------" />
+                <chmod dir="${cbc.dir}" perm="+x" includes="configure,**/install-sh"/>
+						    <exec executable="./configure" dir="${cbc.dir}"
+							    failonerror="true">
+                  <env key="LDFLAGS" value="${compile.ldflags}"/>
+							    <env key="CXXFLAGS" value="${compile.cxxflags}"/>
+							    <arg value="--disable-shared" />
+							    <arg value="--with-pic" />
+							    <arg value="--target=${compile.target}" />
+							    <arg value="--host=${compile.target}" />
+						    </exec>
+						    <!-- Compile coin-cbc -->
+						    <exec executable="make" dir="${cbc.dir}"
+							    failonerror="true" />
+						    <exec executable="make" dir="${cbc.dir}"
+							    failonerror="true">
+							    <arg value="install" />
+						    </exec>
+						    <!-- Compile javacbc -->
+						    <echo message="------------------------------------------------------------------------" />
+						    <echo message="COMPILING JAVACBC" />
+						    <echo message="------------------------------------------------------------------------" />
+						    <copy todir="${project.build.directory}/javacbc">
+							    <fileset dir="../src/main/native" />
+						    </copy>
+						    <mkdir dir="${swig.generated.sources}/${swig.package.dir}" />
+						    <exec executable="make" dir="${project.build.directory}/javacbc"
+							    failonerror="true">
+							    <env key="SWIG_OUTDIR" path="${swig.generated.sources}/${swig.package.dir}" />
+							    <env key="SWIG_PACKAGE" value="${swig.package.name}" />
+							    <env key="CBCDIR" path="${cbc.dir}"/>
+							    <env key="JAVADIR" path="/usr/lib/jvm/default-java"/>
+							    <env key="TARGET" value="${compile.target}"/>
+							    <env key="LDFLAGS" value="${compile.ldflags}"/>
+							    <env key="LIBJAVACBC" value ="${javacbc.lib.name}" />
+						    </exec>
+						    <mkdir dir="${javacbc.generated.resources}/${javacbc.platform.dir}" />
+						    <copy file="${project.build.directory}/javacbc/${javacbc.lib.name}" tofile="${javacbc.generated.resources}/${javacbc.platform.dir}/${javacbc.lib.name}" />
+					    </target>
+				    </configuration>
+					</execution>
+				</executions>
+			</plugin>
+			<!-- To support this plugin in eclipse install the plugin from http://repo1.maven.org/maven2/.m2e/connectors/m2eclipse-buildhelper/0.15.0/N/0.15.0.201207090124/ -->
+			<plugin>
+				<groupId>org.codehaus.mojo</groupId>
+				<artifactId>build-helper-maven-plugin</artifactId>
+				<version>1.8</version>
+				<executions>
+					<execution>
+						<id>add-source-swig</id>
+						<phase>generate-sources</phase>
+						<goals>
+							<goal>add-source</goal>
+						</goals>
+						<configuration>
+							<sources>
+								<source>${swig.generated.sources}</source>
+                <source>../src/main/java</source>
+							</sources>
+						</configuration>
+					</execution>
+					<execution>
+						<id>add-generate-resources</id>
+						<phase>generate-resources</phase>
+						<goals>
+							<goal>add-resource</goal>
+						</goals>
+						<configuration>
+							<resources>
+								<resource>
+									<directory>${javacbc.generated.resources}</directory>
+								</resource>
+							</resources>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
+		</plugins>
+	</build>
+</project>
