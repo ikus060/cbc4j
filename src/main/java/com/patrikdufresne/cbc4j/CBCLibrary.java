@@ -37,15 +37,15 @@ public class CBCLibrary {
     /**
      * cbc java library name.
      */
-    private static final String JAVACBC_JAVA_LIBNAME = "javacbc10";
+    private static final String CBC4J_JAVA_LIBNAME = "cbc4j10";
     /**
      * Relative cbc path according to current architecture.
      */
-    private static final String JAVACBC_LIB_DIR;
+    private static final String CBC4J_LIB_DIR;
     /**
      * cbc library path property name.
      */
-    private static final String JAVACBC_LIBRARY_PATH = "javacbc.library.path";
+    private static final String CBC4J_LIBRARY_PATH = "cbc4j.library.path";
     /**
      * The resource class path separator.
      * <p>
@@ -62,7 +62,7 @@ public class CBCLibrary {
         /* Initialize the constant */
         DELIMITER = System.getProperty("line.separator"); //$NON-NLS-1$
         SEPARATOR = System.getProperty("file.separator"); //$NON-NLS-1$
-        JAVACBC_LIB_DIR = ".cbc" + SEPARATOR + "lib" + SEPARATOR + os() + SEPARATOR + arch(); //$NON-NLS-1$ $NON-NLS-2$
+        CBC4J_LIB_DIR = ".cbc" + SEPARATOR + "lib" + SEPARATOR + os() + SEPARATOR + arch(); //$NON-NLS-1$ $NON-NLS-2$
     }
 
     /**
@@ -179,7 +179,7 @@ public class CBCLibrary {
      *             is the library can't be loaded.
      */
     public static void load() {
-        loadLibrary(JAVACBC_JAVA_LIBNAME);
+        loadLibrary(CBC4J_JAVA_LIBNAME);
     }
 
     /**
@@ -227,7 +227,7 @@ public class CBCLibrary {
         StringBuffer message = new StringBuffer();
 
         /* Try loading library from glpk library path */
-        String path = System.getProperty(JAVACBC_LIBRARY_PATH); //$NON-NLS-1$
+        String path = System.getProperty(CBC4J_LIBRARY_PATH); //$NON-NLS-1$
         if (path != null) {
             path = new File(path).getAbsolutePath();
             if (load(path, libName1, message)) return;
@@ -242,7 +242,7 @@ public class CBCLibrary {
         String fileName1 = mapLibraryName(libName1);
         if (path == null) {
             path = System.getProperty("user.home"); //$NON-NLS-1$
-            File dir = new File(path, JAVACBC_LIB_DIR);
+            File dir = new File(path, CBC4J_LIB_DIR);
             if ((dir.exists() && dir.isDirectory()) || dir.mkdirs()) {
                 path = dir.getAbsolutePath();
             } else {

@@ -11,13 +11,13 @@
 		<compile.target>x86_64-linux-gnu</compile.target>
     <compile.ldflags></compile.ldflags>
 		<compile.cxxflags></compile.cxxflags>
-    <javacbc.lib.name>libjavacbc${javacbc.version}.so</javacbc.lib.name>
-    <javacbc.platform.dir>linux/x86_64</javacbc.platform.dir>
+    <cbc4j.lib.name>libcbc4j${cbc4j.version}.so</cbc4j.lib.name>
+    <cbc4j.platform.dir>linux/x86_64</cbc4j.platform.dir>
 	</properties>
 	<build>
 		<plugins>
-			<!-- Compile cbc and javacbc -->
-      <!-- The configuration is defined in the parent pom -->
+			<!-- Compile cbc and cbc4j -->
+			<!-- The configuration is defined in the parent pom -->
 			<plugin>
 				<artifactId>maven-antrun-plugin</artifactId>
 				<version>1.7</version>
@@ -56,15 +56,15 @@
 							    failonerror="true">
 							    <arg value="install" />
 						    </exec>
-						    <!-- Compile javacbc -->
+						    <!-- Compile cbc4j -->
 						    <echo message="------------------------------------------------------------------------" />
-						    <echo message="COMPILING JAVACBC" />
+						    <echo message="COMPILING CBC4J" />
 						    <echo message="------------------------------------------------------------------------" />
-						    <copy todir="${project.build.directory}/javacbc">
+						    <copy todir="${project.build.directory}/cbc4j">
 							    <fileset dir="../src/main/native" />
 						    </copy>
 						    <mkdir dir="${swig.generated.sources}/${swig.package.dir}" />
-						    <exec executable="make" dir="${project.build.directory}/javacbc"
+						    <exec executable="make" dir="${project.build.directory}/cbc4j"
 							    failonerror="true">
 							    <env key="SWIG_OUTDIR" path="${swig.generated.sources}/${swig.package.dir}" />
 							    <env key="SWIG_PACKAGE" value="${swig.package.name}" />
@@ -72,10 +72,10 @@
 							    <env key="JAVADIR" path="/usr/lib/jvm/default-java"/>
 							    <env key="TARGET" value="${compile.target}"/>
 							    <env key="LDFLAGS" value="${compile.ldflags}"/>
-							    <env key="LIBJAVACBC" value ="${javacbc.lib.name}" />
+							    <env key="LIBCBC4J" value ="${cbc4j.lib.name}" />
 						    </exec>
-						    <mkdir dir="${javacbc.generated.resources}/${javacbc.platform.dir}" />
-						    <copy file="${project.build.directory}/javacbc/${javacbc.lib.name}" tofile="${javacbc.generated.resources}/${javacbc.platform.dir}/${javacbc.lib.name}" />
+						    <mkdir dir="${cbc4j.generated.resources}/${cbc4j.platform.dir}" />
+						    <copy file="${project.build.directory}/cbc4j/${cbc4j.lib.name}" tofile="${cbc4j.generated.resources}/${cbc4j.platform.dir}/${cbc4j.lib.name}" />
 					    </target>
 				    </configuration>
 					</execution>
@@ -109,7 +109,7 @@
 						<configuration>
 							<resources>
 								<resource>
-									<directory>${javacbc.generated.resources}</directory>
+									<directory>${cbc4j.generated.resources}</directory>
 								</resource>
 							</resources>
 						</configuration>

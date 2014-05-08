@@ -27,7 +27,7 @@
     </distributionManagement>
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <javacbc.version>10</javacbc.version>
+        <cbc4j.version>10</cbc4j.version>
         <!-- Define the version of cbc dependency -->
         <cbc.version>2.8.3</cbc.version>
         <!-- Define location of the source -->
@@ -38,8 +38,8 @@
         <swig.package.dir>com/patrikdufresne/cbc4j</swig.package.dir>
         <!-- Define destination of generated source -->
         <swig.generated.sources>${project.build.directory}/generated-sources/swig</swig.generated.sources>
-        <!-- Define destination of generated javacbc lib -->
-        <javacbc.generated.resources>${project.build.directory}/generated-resources/javacbc</javacbc.generated.resources>
+        <!-- Define destination of generated cbc4j lib -->
+        <cbc4j.generated.resources>${project.build.directory}/generated-resources/cbc4j</cbc4j.generated.resources>
     </properties>
     <build>
         <plugins>
