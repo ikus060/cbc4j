@@ -13,6 +13,7 @@ using namespace std;
 void addCol(OsiClpSolverInterface& osi, int numberElements, const int *rows, const double *elements, const double collb, const double colub, const double obj);
 void addRow(OsiClpSolverInterface& osi, int numberElements, const int *columns, const double *element, const double rowlb, const double rowub);
 double bestSolution(CbcModel& c, int colIndex);
+const double* bestSolution(CbcModel& c);
 void branchAndBound(CbcModel& c, int doStatistics = 0);
 void callCbc0 (CbcModel &m);
 int callCbc1 (int argc, const char *argv[], CbcModel & babSolver);

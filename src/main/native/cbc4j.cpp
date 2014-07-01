@@ -39,6 +39,10 @@ double bestSolution(CbcModel& c, int colIndex){
     return c.bestSolution()[colIndex];
 }
 
+const double* bestSolution(CbcModel& c){
+    return c.bestSolution();
+}
+
 void branchAndBound(CbcModel& c, int doStatistics){
     c.branchAndBound(doStatistics);
     std::cout.flush();

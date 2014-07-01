@@ -11,12 +11,13 @@
 using namespace std;
 typedef std::string String;
 %typemap(out) const double* {
-$result = SWIG_JavaArrayOutDouble(jenv, $1, arg1->getNumCols());
+$result = ($1) ? SWIG_JavaArrayOutDouble(jenv, $1, arg1->getNumCols()) : 0;
 }
 
 extern void addCol(OsiClpSolverInterface& osi, int numberElements, const int *rows, const double *elements, const double collb, const double colub, const double obj);
 extern void addRow(OsiClpSolverInterface& osi, int numberElements, const int *columns, const double *element, const double rowlb, const double rowub);
 extern double bestSolution(CbcModel& c, int colIndex);
+extern const double* bestSolution(CbcModel& c);
 extern void branchAndBound(CbcModel& c, int doStatistics = 0);
 extern void callCbc0 (CbcModel &m);
 extern int callCbc1 (int argc, const char *argv[], CbcModel & babSolver);
