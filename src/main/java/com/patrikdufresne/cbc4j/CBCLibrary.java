@@ -37,7 +37,7 @@ public class CBCLibrary {
     /**
      * cbc java library name.
      */
-    private static final String CBC4J_JAVA_LIBNAME = "cbc4j10";
+    private static final String CBC4J_JAVA_LIBNAME = "cbc4j11";
     /**
      * Relative cbc path according to current architecture.
      */
