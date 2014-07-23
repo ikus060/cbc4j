@@ -8,7 +8,7 @@
     <!-- Define the SCM used for developpement. This information is used by 
         release:prepare -->
     <scm>
-        <developerConnection>scm:git:http://git.patrikdufresne.com/cbc4j.git</developerConnection>
+        <developerConnection>scm:git:http://git.patrikdufresne.com/common/cbc4j.git</developerConnection>
         <tag>HEAD</tag>
     </scm>
     <!-- Define the repository for deployment -->
