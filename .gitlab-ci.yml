@@ -1,0 +1,32 @@
+image: maven:3-jdk-8
+
+variables:
+  MAVEN_OPTS: "-Dorg.slf4j.simpleLogger.log.org.apache.maven.cli.transfer.Slf4jMavenTransferListener=WARN
+               -Dorg.slf4j.simpleLogger.showDateTime=true
+               -Djava.awt.headless=true
+               -Dmaven.repo.local=.m2/repository"
+
+# Cache downloaded dependencies and plugins between builds.
+cache:
+  paths:
+    - .m2/repository
+
+stages:
+  - build
+
+before_script:
+- export REVISION="$(curl http://git.patrikdufresne.com/pdsl/maven-scm-version/raw/master/version.sh | bash -)"
+- echo "REVISION=$REVISION"
+
+test_deploy:
+  stage: build
+  script:
+  - apt-get update && apt-get install -y default-jdk swig build-essential gcc-mingw-w64 mingw-w64 g++-multilib
+  - mvn -B -s ./settings.xml -Drevision=${REVISION} clean install deploy
+
+sonar:
+  stage: build
+  allow_failure: true
+  script:
+  - apt-get update && apt-get install -y default-jdk swig build-essential gcc-mingw-w64 mingw-w64 g++-multilib
+  - mvn -B -Drevision=${REVISION} -Dsonar.host.url=$SONAR_URL -Dsonar.login=$SONAR_TOKEN clean verify sonar:sonar
