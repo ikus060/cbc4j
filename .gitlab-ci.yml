@@ -29,4 +29,4 @@ sonar:
   allow_failure: true
   script:
   - apt-get update && apt-get install -y default-jdk swig build-essential gcc-mingw-w64 mingw-w64 g++-multilib
-  - mvn -B -Drevision=${REVISION} -Dsonar.host.url=$SONAR_URL -Dsonar.login=$SONAR_TOKEN clean verify sonar:sonar
+  - mvn -B -Drevision=${REVISION} -Dsonar.host.url=$SONAR_URL -Dsonar.login=$SONAR_TOKEN org.jacoco:jacoco-maven-plugin:prepare-agent clean verify sonar:sonar
