@@ -18,15 +18,8 @@ before_script:
 - export REVISION="$(curl http://git.patrikdufresne.com/pdsl/maven-scm-version/raw/master/version.sh | bash -)"
 - echo "REVISION=$REVISION"
 
-test_deploy:
+build:
   stage: build
   script:
   - apt-get update && apt-get install -y default-jdk swig build-essential gcc-mingw-w64 mingw-w64 g++-multilib
   - mvn -B -s ./settings.xml -Drevision=${REVISION} clean install deploy
-
-sonar:
-  stage: build
-  allow_failure: true
-  script:
-  - apt-get update && apt-get install -y default-jdk swig build-essential gcc-mingw-w64 mingw-w64 g++-multilib
-  - mvn -B -Drevision=${REVISION} -Dsonar.host.url=$SONAR_URL -Dsonar.login=$SONAR_TOKEN org.jacoco:jacoco-maven-plugin:prepare-agent clean verify sonar:sonar
