@@ -28,7 +28,7 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <cbc4j.version>11</cbc4j.version>
         <!-- Define the version of cbc dependency -->
-        <cbc.version>2.8.3</cbc.version>
+        <cbc.version>2.10.3</cbc.version>
         <!-- Define location of the source -->
         <cbc.url>http://www.coin-or.org/download/source/Cbc/Cbc-${cbc.version}.tgz</cbc.url>
         <cbc.dir>${project.build.directory}/Cbc-${cbc.version}</cbc.dir>
