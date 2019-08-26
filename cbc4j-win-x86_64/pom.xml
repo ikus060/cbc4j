@@ -33,10 +33,6 @@
 								<!-- Get the coin-cbc source -->
 								<get src="${cbc.url}" dest="${cbc.dir}.tgz" skipexisting="true" />
 								<untar src="${cbc.dir}.tgz" dest="${project.build.directory}" compression="gzip" />
-								<exec executable="bash" dir="${cbc.dir}" failonerror="true">
-									<arg value="-c" />
-									<arg value="for FILE in ${project.basedir}/patches/*.diff; do patch -p1 &lt; $FILE; done" />
-								</exec>
 								<!-- Configure coin-cbc -->
 								<echo message="------------------------------------------------------------------------" />
 								<echo message="COMPILING COIN_CBC" />
@@ -55,6 +51,10 @@
 								<exec executable="make" dir="${cbc.dir}" failonerror="true">
 									<arg value="install" />
 								</exec>
+                                <exec executable="bash" dir="${cbc.dir}" failonerror="true">
+                                    <arg value="-c" />
+                                    <arg value="for FILE in ${project.basedir}/../patches/*.diff; do patch -p1 &lt; $FILE; done" />
+                                </exec>
 								<!-- Compile cbc4j -->
 								<echo message="------------------------------------------------------------------------" />
 								<echo message="COMPILING CBC4J" />
