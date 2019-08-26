@@ -1,0 +1,41 @@
+--- a/Cbc/include/coin/OsiClpSolverInterface.hpp
++++ b/Cbc/include/coin/OsiClpSolverInterface.hpp
+@@ -174,13 +174,9 @@
+      and can be queried by other methods.
+   */
+   virtual void enableSimplexInterface(bool doingPrimal);
+-  /// Copy across enabled stuff from one solver to another
+-  void copyEnabledSuff(OsiClpSolverInterface &rhs);
+ 
+   /*! \brief Undo setting changes made by #enableSimplexInterface */
+   virtual void disableSimplexInterface();
+-  /// Copy across enabled stuff from one solver to another
+-  void copyEnabledStuff(ClpSimplex &rhs);
+ 
+   /** Perform a pivot by substituting a colIn for colOut in the basis. 
+       The status of the leaving variable is given in statOut. Where
+@@ -340,16 +336,6 @@
+   void stopFastDual();
+   /// Sets integer tolerance and increment
+   void setStuff(double tolerance, double increment);
+-  /// Return a conflict analysis cut from small model
+-  OsiRowCut *smallModelCut(const double *originalLower, const double *originalUpper,
+-    int numberRowsAtContinuous, const int *whichGenerator,
+-    int typeCut = 0);
+-  /** Return a conflict analysis cut from model
+-      If type is 0 then genuine cut, if 1 then only partially processed
+-   */
+-  OsiRowCut *modelCut(const double *originalLower, const double *originalUpper,
+-    int numberRowsAtContinuous, const int *whichGenerator,
+-    int typeCut = 0);
+   //@}
+ 
+   //---------------------------------------------------------------------------
+@@ -972,7 +958,6 @@
+   /// This loads a model from a coinModel object - returns number of errors
+   virtual int loadFromCoinModel(CoinModel &modelObject, bool keepSolution = false);
+ 
+-  using OsiSolverInterface::readMps;
+   /** Read an mps file from the given filename (defaults to Osi reader) - returns
+       number of errors (see OsiMpsReader class) */
+   virtual int readMps(const char *filename,

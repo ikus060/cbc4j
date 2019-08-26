@@ -1,4 +1,5 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 	<parent>
 		<groupId>com.patrikdufresne.cbc4j</groupId>
@@ -8,10 +9,10 @@
 	<artifactId>cbc4j-win-x86_64</artifactId>
 	<properties>
 		<compile.target>x86_64-w64-mingw32</compile.target>
-    <compile.ldflags>-static-libgcc -static-libstdc++</compile.ldflags>
+		<compile.ldflags>-static-libgcc -static-libstdc++</compile.ldflags>
 		<compile.cxxflags />
-    <cbc4j.lib.name>cbc4j${cbc4j.version}.dll</cbc4j.lib.name>
-    <cbc4j.platform.dir>win/x86_64</cbc4j.platform.dir>
+		<cbc4j.lib.name>cbc4j${cbc4j.version}.dll</cbc4j.lib.name>
+		<cbc4j.platform.dir>win/x86_64</cbc4j.platform.dir>
 	</properties>
 	<build>
 		<plugins>
@@ -27,50 +28,54 @@
 						<goals>
 							<goal>run</goal>
 						</goals>
-            <configuration>
-					    <target>				
-						    <!-- Get the coin-cbc source -->
-						    <get src="${cbc.url}" dest="${cbc.dir}.tgz" skipexisting="true" />
-						    <untar src="${cbc.dir}.tgz" dest="${project.build.directory}" compression="gzip" />
-						    <!-- Configure coin-cbc -->
-						    <echo message="------------------------------------------------------------------------" />
-						    <echo message="COMPILING COIN_CBC" />
-						    <echo message="------------------------------------------------------------------------" />
-                <chmod dir="${cbc.dir}" perm="+x" includes="configure,**/install-sh" />
-						    <exec executable="./configure" dir="${cbc.dir}" failonerror="true">
-                  <env key="LDFLAGS" value="${compile.ldflags}" />
-							    <env key="CXXFLAGS" value="${compile.cxxflags}" />
-							    <arg value="--disable-shared" />
-							    <arg value="--with-pic" />
-							    <arg value="--target=${compile.target}" />
-							    <arg value="--host=${compile.target}" />
-						    </exec>
-						    <!-- Compile coin-cbc -->
-						    <exec executable="make" dir="${cbc.dir}" failonerror="true" />
-						    <exec executable="make" dir="${cbc.dir}" failonerror="true">
-							    <arg value="install" />
-						    </exec>
-						    <!-- Compile cbc4j -->
-						    <echo message="------------------------------------------------------------------------" />
-						    <echo message="COMPILING CBC4J" />
-						    <echo message="------------------------------------------------------------------------" />
-						    <copy todir="${project.build.directory}/cbc4j">
-							    <fileset dir="../src/main/native" />
-						    </copy>
-						    <mkdir dir="${swig.generated.sources}/${swig.package.dir}" />
-						    <exec executable="make" dir="${project.build.directory}/cbc4j" failonerror="true">
-							    <env key="SWIG_OUTDIR" path="${swig.generated.sources}/${swig.package.dir}" />
-							    <env key="SWIG_PACKAGE" value="${swig.package.name}" />
-							    <env key="CBCDIR" path="${cbc.dir}" />
-							    <env key="JAVADIR" path="/usr/lib/jvm/default-java" />
-							    <env key="TARGET" value="${compile.target}" />
-							    <env key="LDFLAGS" value="${compile.ldflags}" />
-							    <env key="LIBCBC4J" value="${cbc4j.lib.name}" />
-						    </exec>
-						    <mkdir dir="${cbc4j.generated.resources}/${cbc4j.platform.dir}" />
-						    <copy file="${project.build.directory}/cbc4j/${cbc4j.lib.name}" tofile="${cbc4j.generated.resources}/${cbc4j.platform.dir}/${cbc4j.lib.name}" />
-					    </target>
-				    </configuration>
+						<configuration>
+							<target>
+								<!-- Get the coin-cbc source -->
+								<get src="${cbc.url}" dest="${cbc.dir}.tgz" skipexisting="true" />
+								<untar src="${cbc.dir}.tgz" dest="${project.build.directory}" compression="gzip" />
+								<exec executable="bash" dir="${cbc.dir}" failonerror="true">
+									<arg value="-c" />
+									<arg value="for FILE in ${project.basedir}/patches/*.diff; do patch -p1 &lt; $FILE; done" />
+								</exec>
+								<!-- Configure coin-cbc -->
+								<echo message="------------------------------------------------------------------------" />
+								<echo message="COMPILING COIN_CBC" />
+								<echo message="------------------------------------------------------------------------" />
+								<chmod dir="${cbc.dir}" perm="+x" includes="configure,**/install-sh" />
+								<exec executable="./configure" dir="${cbc.dir}" failonerror="true">
+									<env key="LDFLAGS" value="${compile.ldflags}" />
+									<env key="CXXFLAGS" value="${compile.cxxflags}" />
+									<arg value="--disable-shared" />
+									<arg value="--with-pic" />
+									<arg value="--target=${compile.target}" />
+									<arg value="--host=${compile.target}" />
+								</exec>
+								<!-- Compile coin-cbc -->
+								<exec executable="make" dir="${cbc.dir}" failonerror="true" />
+								<exec executable="make" dir="${cbc.dir}" failonerror="true">
+									<arg value="install" />
+								</exec>
+								<!-- Compile cbc4j -->
+								<echo message="------------------------------------------------------------------------" />
+								<echo message="COMPILING CBC4J" />
+								<echo message="------------------------------------------------------------------------" />
+								<copy todir="${project.build.directory}/cbc4j">
+									<fileset dir="../src/main/native" />
+								</copy>
+								<mkdir dir="${swig.generated.sources}/${swig.package.dir}" />
+								<exec executable="make" dir="${project.build.directory}/cbc4j" failonerror="true">
+									<env key="SWIG_OUTDIR" path="${swig.generated.sources}/${swig.package.dir}" />
+									<env key="SWIG_PACKAGE" value="${swig.package.name}" />
+									<env key="CBCDIR" path="${cbc.dir}" />
+									<env key="JAVADIR" path="/usr/lib/jvm/default-java" />
+									<env key="TARGET" value="${compile.target}" />
+									<env key="LDFLAGS" value="${compile.ldflags}" />
+									<env key="LIBCBC4J" value="${cbc4j.lib.name}" />
+								</exec>
+								<mkdir dir="${cbc4j.generated.resources}/${cbc4j.platform.dir}" />
+								<copy file="${project.build.directory}/cbc4j/${cbc4j.lib.name}" tofile="${cbc4j.generated.resources}/${cbc4j.platform.dir}/${cbc4j.lib.name}" />
+							</target>
+						</configuration>
 					</execution>
 				</executions>
 			</plugin>
@@ -89,7 +94,7 @@
 						<configuration>
 							<sources>
 								<source>${swig.generated.sources}</source>
-                <source>../src/main/java</source>
+								<source>../src/main/java</source>
 							</sources>
 						</configuration>
 					</execution>
